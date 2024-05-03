@@ -44,8 +44,4 @@ public class Account {
   @Column(name = "updated_at")
   @UpdateTimestamp
   private OffsetDateTime updatedAt;
-
-  public String getFullName(){
-    return firstName + " " + lastName;
-  }
 }

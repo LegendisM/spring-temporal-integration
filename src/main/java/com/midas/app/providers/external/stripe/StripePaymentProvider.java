@@ -8,7 +8,6 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.param.CustomerCreateParams;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -20,9 +19,9 @@ public class StripePaymentProvider implements PaymentProvider {
 
   private final StripeConfiguration configuration;
 
-  public StripePaymentProvider(StripeConfiguration configuration){
-      this.configuration = configuration;
-      Stripe.apiKey = configuration.getApiKey();
+  public StripePaymentProvider(StripeConfiguration configuration) {
+    this.configuration = configuration;
+    Stripe.apiKey = configuration.getApiKey();
   }
 
   /** providerName is the name of the payment provider */
@@ -39,16 +38,17 @@ public class StripePaymentProvider implements PaymentProvider {
    */
   @Override
   public String createCustomer(Account account) {
-    CustomerCreateParams params = CustomerCreateParams.builder()
+    CustomerCreateParams params =
+        CustomerCreateParams.builder()
             .setEmail(account.getEmail())
-            .setName(account.getFullName())
+            .setName(account.getFirstName() + " " + account.getLastName())
             .build();
     try {
-        var customer = Customer.create(params);
-        logger.info("Stripe customer created with id " + customer.getId());
-        return customer.getId();
-    } catch (StripeException exception){
-        throw new ThirdPartyServiceException();
+      var customer = Customer.create(params);
+      logger.info("Stripe customer created with id " + customer.getId());
+      return customer.getId();
+    } catch (StripeException exception) {
+      throw new ThirdPartyServiceException();
     }
   }
 }

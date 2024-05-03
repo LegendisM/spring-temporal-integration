@@ -7,8 +7,8 @@ import io.temporal.workflow.WorkflowMethod;
 
 @WorkflowInterface
 public interface PaymentCustomerWorkflow {
-    String QUEUE_NAME = "payment-customer-workflow";
+  String QUEUE_NAME = "payment-customer-workflow";
 
-    @WorkflowMethod
-    String createPaymentCustomer(ProviderType providerType, Account account);
+  @WorkflowMethod
+  String createPaymentCustomer(ProviderType providerType, Account account);
 }

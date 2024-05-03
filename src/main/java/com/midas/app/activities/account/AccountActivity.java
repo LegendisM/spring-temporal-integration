@@ -34,5 +34,6 @@ public interface AccountActivity {
    * @return Account
    */
   @ActivityMethod
-  Account updateAccountPaymentInformation(String accountId, ProviderType providerType, String providerId);
+  Account updateAccountPaymentInformation(
+      String accountId, ProviderType providerType, String providerId);
 }

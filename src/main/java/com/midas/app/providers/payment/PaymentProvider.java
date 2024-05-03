@@ -1,6 +1,5 @@
 package com.midas.app.providers.payment;
 
-import com.midas.app.exceptions.ThirdPartyServiceException;
 import com.midas.app.models.Account;
 
 public interface PaymentProvider {

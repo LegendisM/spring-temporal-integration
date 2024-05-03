@@ -1,8 +1,7 @@
 package com.midas.app.exceptions;
 
-import org.springframework.http.HttpStatus;
-
 import java.util.List;
+import org.springframework.http.HttpStatus;
 
 public class ThirdPartyServiceException extends ApiException {
 
