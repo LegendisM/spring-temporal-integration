@@ -13,4 +13,11 @@ public interface PaymentProvider {
    * @return id is the returned customer id of payment provider
    */
   String createCustomer(Account account);
+
+  /**
+   * updateCustomer update existed customer in the payment provider.
+   *
+   * @param account is the account instance for retrieve updated data
+   */
+  void updateCustomer(Account account);
 }

@@ -9,4 +9,7 @@ import io.temporal.activity.ActivityMethod;
 public interface PaymentCustomerActivity {
   @ActivityMethod
   String createCustomer(ProviderType providerType, Account account);
+
+  @ActivityMethod
+  void updateCustomer(ProviderType providerType, Account account);
 }

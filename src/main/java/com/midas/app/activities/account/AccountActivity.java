@@ -26,6 +26,15 @@ public interface AccountActivity {
   Account createAccount(Account account);
 
   /**
+   * updateAccount update a user account information in the system
+   *
+   * @param account is the account to be updated
+   * @return Account
+   */
+  @ActivityMethod
+  Account updateAccount(Account account);
+
+  /**
    * updateAccountPaymentInformation update payment provider information of account
    *
    * @param accountId is the account identifier

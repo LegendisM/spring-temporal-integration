@@ -10,20 +10,24 @@ import io.temporal.workflow.Workflow;
 
 @WorkflowImpl(taskQueues = CreateAccountWorkflow.QUEUE_NAME)
 public class CreateAccountWorkflowImpl implements CreateAccountWorkflow {
-    private final AccountActivity accountActivity =
-            Workflow.newActivityStub(AccountActivity.class, TemporalServiceImpl.createActivityOptions());
+    private final AccountActivity accountActivity = Workflow.newActivityStub(AccountActivity.class,
+            TemporalServiceImpl.createActivityOptions()
+    );
 
-    private final PaymentCustomerActivity paymentCustomerActivity =
-            Workflow.newActivityStub(
-                    PaymentCustomerActivity.class, TemporalServiceImpl.createActivityOptions());
+    private final PaymentCustomerActivity paymentCustomerActivity = Workflow.newActivityStub(
+            PaymentCustomerActivity.class,
+            TemporalServiceImpl.createActivityOptions()
+    );
 
     @Override
     public Account createAccount(Account details) {
         var account = accountActivity.createAccount(details);
 
+        // * Create customer of account in payment provider side
         var defaultProviderType = ProviderType.STRIPE;
         var paymentCustomerId = paymentCustomerActivity.createCustomer(defaultProviderType, account);
 
+        // * Set the returned provider customer id on account
         return accountActivity.updateAccountPaymentInformation(
                 account.getId().toString(),
                 defaultProviderType,

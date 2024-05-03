@@ -19,6 +19,11 @@ public class PaymentCustomerActivityImpl implements PaymentCustomerActivity {
     return getPaymentProvider(providerType).createCustomer(account);
   }
 
+  @Override
+  public void updateCustomer(ProviderType providerType, Account account) {
+    getPaymentProvider(providerType).updateCustomer(account);
+  }
+
   private PaymentProvider getPaymentProvider(ProviderType providerType) {
     return switch (providerType) {
       case STRIPE -> stripePaymentProvider;

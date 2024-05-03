@@ -5,6 +5,8 @@ import com.midas.app.models.Account;
 import com.midas.app.repositories.AccountRepository;
 import com.midas.app.services.temporal.TemporalService;
 import com.midas.app.workflows.account.CreateAccountWorkflow;
+import com.midas.app.workflows.account.UpdateAccountWorkflow;
+import com.midas.generated.model.UpdateAccountDto;
 import io.temporal.workflow.Workflow;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,11 +32,28 @@ public class AccountServiceImpl implements AccountService {
   public Account createAccount(Account details) {
     logger.info("initiating workflow to create account for email: {}", details.getEmail());
 
-    var accountWorkflow =
-        temporalService.createWorkflowStub(
-            CreateAccountWorkflow.class, CreateAccountWorkflow.QUEUE_NAME, details.getEmail());
+    var createAccountWorkflow = temporalService.createWorkflowStub(CreateAccountWorkflow.class, CreateAccountWorkflow.QUEUE_NAME, details.getEmail());
 
-    return accountWorkflow.createAccount(details);
+    return createAccountWorkflow.createAccount(details);
+  }
+
+  /**
+   * updateAccount update the information of account.
+   *
+   * @param updateAccountDto is the new information of the account to be updated.
+   * @return Account
+   */
+  @Override
+  public Account updateAccount(String id, UpdateAccountDto updateAccountDto) {
+    Account account = findById(id);
+
+    account.setFirstName(updateAccountDto.getFirstName());
+    account.setLastName(updateAccountDto.getLastName());
+    account.setEmail(updateAccountDto.getEmail());
+
+    var updateAccountWorkflow = temporalService.createWorkflowStub(UpdateAccountWorkflow.class,UpdateAccountWorkflow.QUEUE_NAME, account.getEmail());
+
+    return updateAccountWorkflow.updateAccount(account);
   }
 
   /**

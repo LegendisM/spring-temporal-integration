@@ -7,12 +7,18 @@ import com.midas.generated.api.AccountsApi;
 import com.midas.generated.model.AccountDto;
 import com.midas.generated.model.CreateAccountDto;
 import java.util.List;
+import java.util.UUID;
+
+import com.midas.generated.model.UpdateAccountDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,6 +46,21 @@ public class AccountController implements AccountsApi {
                 .build());
 
     return new ResponseEntity<>(Mapper.toAccountDto(account), HttpStatus.CREATED);
+  }
+
+  /**
+   * PATCH /accounts/{accountId} : Update information of existed user account
+   *
+   * @param updateAccountDto New user account details (required)
+   * @return User account updated (status code 200)
+   */
+  @Override
+  public ResponseEntity<AccountDto> updateUserAccount(String accountId, UpdateAccountDto updateAccountDto) {
+    logger.info("Request for updating account with ID: {}", accountId);
+
+    Account updatedAccount = accountService.updateAccount(accountId, updateAccountDto);
+
+    return new ResponseEntity<>(Mapper.toAccountDto(updatedAccount), HttpStatus.OK);
   }
 
   /**

@@ -1,6 +1,8 @@
 package com.midas.app.services.account;
 
 import com.midas.app.models.Account;
+import com.midas.generated.model.UpdateAccountDto;
+
 import java.util.List;
 
 public interface AccountService {
@@ -11,6 +13,14 @@ public interface AccountService {
    * @return Account
    */
   Account createAccount(Account details);
+
+  /**
+   * updateAccount update the information of account.
+   *
+   * @param updateAccountDto is the new information of the account to be updated.
+   * @return Account
+   */
+  Account updateAccount(String id, UpdateAccountDto updateAccountDto);
 
   /**
    * getAccounts returns a list of accounts.
