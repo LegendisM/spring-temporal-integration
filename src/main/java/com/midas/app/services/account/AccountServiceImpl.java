@@ -9,6 +9,7 @@ import com.midas.app.workflows.account.UpdateAccountWorkflow;
 import com.midas.generated.model.UpdateAccountDto;
 import io.temporal.workflow.Workflow;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,9 @@ public class AccountServiceImpl implements AccountService {
   public Account createAccount(Account details) {
     logger.info("initiating workflow to create account for email: {}", details.getEmail());
 
-    var createAccountWorkflow = temporalService.createWorkflowStub(CreateAccountWorkflow.class, CreateAccountWorkflow.QUEUE_NAME, details.getEmail());
+    var createAccountWorkflow =
+        temporalService.createWorkflowStub(
+            CreateAccountWorkflow.class, CreateAccountWorkflow.QUEUE_NAME, details.getEmail());
 
     return createAccountWorkflow.createAccount(details);
   }
@@ -44,14 +47,16 @@ public class AccountServiceImpl implements AccountService {
    * @return Account
    */
   @Override
-  public Account updateAccount(String id, UpdateAccountDto updateAccountDto) {
+  public Account updateAccount(UUID id, UpdateAccountDto updateAccountDto) {
     Account account = findById(id);
 
     account.setFirstName(updateAccountDto.getFirstName());
     account.setLastName(updateAccountDto.getLastName());
     account.setEmail(updateAccountDto.getEmail());
 
-    var updateAccountWorkflow = temporalService.createWorkflowStub(UpdateAccountWorkflow.class,UpdateAccountWorkflow.QUEUE_NAME, account.getEmail());
+    var updateAccountWorkflow =
+        temporalService.createWorkflowStub(
+            UpdateAccountWorkflow.class, UpdateAccountWorkflow.QUEUE_NAME, account.getEmail());
 
     return updateAccountWorkflow.updateAccount(account);
   }
@@ -67,10 +72,15 @@ public class AccountServiceImpl implements AccountService {
   }
 
   @Override
-  public Account findById(String id) {
+  public Account findById(UUID id) {
     return accountRepository
         .findById(id)
         .orElseThrow(() -> new ResourceNotFoundException("account-not-found"));
+  }
+
+  @Override
+  public Account findById(String id) {
+    return findById(UUID.fromString(id));
   }
 
   @Override

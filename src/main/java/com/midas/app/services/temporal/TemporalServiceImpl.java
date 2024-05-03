@@ -4,6 +4,8 @@ import com.midas.app.activities.account.AccountActivityImpl;
 import com.midas.app.activities.payment.PaymentCustomerActivityImpl;
 import com.midas.app.workflows.account.CreateAccountWorkflow;
 import com.midas.app.workflows.account.CreateAccountWorkflowImpl;
+import com.midas.app.workflows.account.UpdateAccountWorkflow;
+import com.midas.app.workflows.account.UpdateAccountWorkflowImpl;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -38,10 +40,16 @@ public class TemporalServiceImpl implements TemporalService {
     WorkflowClient client = WorkflowClient.newInstance(service);
     WorkerFactory factory = WorkerFactory.newInstance(client);
 
-    // Create a worker that listens on the account task queue
-    Worker accountWorker = factory.newWorker(CreateAccountWorkflow.QUEUE_NAME);
-    accountWorker.registerWorkflowImplementationTypes(CreateAccountWorkflowImpl.class);
-    accountWorker.registerActivitiesImplementations(
+    // Create a worker that listens on the create account task queue
+    Worker createAccountWorker = factory.newWorker(CreateAccountWorkflow.QUEUE_NAME);
+    createAccountWorker.registerWorkflowImplementationTypes(CreateAccountWorkflowImpl.class);
+    createAccountWorker.registerActivitiesImplementations(
+        accountActivityImpl, paymentCustomerActivityImpl);
+
+    // Create a worker that listens on the update account task queue
+    Worker updateAccountWorker = factory.newWorker(UpdateAccountWorkflow.QUEUE_NAME);
+    updateAccountWorker.registerWorkflowImplementationTypes(UpdateAccountWorkflowImpl.class);
+    updateAccountWorker.registerActivitiesImplementations(
         accountActivityImpl, paymentCustomerActivityImpl);
 
     // Start all the workers created by this factory

@@ -2,8 +2,8 @@ package com.midas.app.services.account;
 
 import com.midas.app.models.Account;
 import com.midas.generated.model.UpdateAccountDto;
-
 import java.util.List;
+import java.util.UUID;
 
 public interface AccountService {
   /**
@@ -20,7 +20,7 @@ public interface AccountService {
    * @param updateAccountDto is the new information of the account to be updated.
    * @return Account
    */
-  Account updateAccount(String id, UpdateAccountDto updateAccountDto);
+  Account updateAccount(UUID id, UpdateAccountDto updateAccountDto);
 
   /**
    * getAccounts returns a list of accounts.
@@ -33,6 +33,14 @@ public interface AccountService {
    * findById find account by id or throw exception
    *
    * @param id is the account id you want to find by that
+   * @return Account
+   */
+  Account findById(UUID id);
+
+  /**
+   * findById find account by string id or throw exception
+   *
+   * @param id is the account id with type string you want to find by that
    * @return Account
    */
   Account findById(String id);

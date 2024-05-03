@@ -6,19 +6,15 @@ import com.midas.app.services.account.AccountService;
 import com.midas.generated.api.AccountsApi;
 import com.midas.generated.model.AccountDto;
 import com.midas.generated.model.CreateAccountDto;
+import com.midas.generated.model.UpdateAccountDto;
 import java.util.List;
 import java.util.UUID;
-
-import com.midas.generated.model.UpdateAccountDto;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,8 +51,9 @@ public class AccountController implements AccountsApi {
    * @return User account updated (status code 200)
    */
   @Override
-  public ResponseEntity<AccountDto> updateUserAccount(String accountId, UpdateAccountDto updateAccountDto) {
-    logger.info("Request for updating account with ID: {}", accountId);
+  public ResponseEntity<AccountDto> updateUserAccount(
+      UUID accountId, UpdateAccountDto updateAccountDto) {
+    logger.info("Request for updating account with ID: {}", accountId.toString());
 
     Account updatedAccount = accountService.updateAccount(accountId, updateAccountDto);
 
