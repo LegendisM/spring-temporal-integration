@@ -48,7 +48,7 @@ public class StripePaymentProvider implements PaymentProvider {
       logger.info("Stripe customer created with id " + customer.getId());
       return customer.getId();
     } catch (StripeException exception) {
-      throw new ThirdPartyServiceException();
+      throw new ThirdPartyServiceException(exception.getUserMessage());
     }
   }
 }

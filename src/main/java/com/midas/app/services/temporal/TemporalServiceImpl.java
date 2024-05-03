@@ -4,8 +4,6 @@ import com.midas.app.activities.account.AccountActivityImpl;
 import com.midas.app.activities.payment.PaymentCustomerActivityImpl;
 import com.midas.app.workflows.account.CreateAccountWorkflow;
 import com.midas.app.workflows.account.CreateAccountWorkflowImpl;
-import com.midas.app.workflows.payment.PaymentCustomerWorkflow;
-import com.midas.app.workflows.payment.PaymentCustomerWorkflowImpl;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -43,13 +41,7 @@ public class TemporalServiceImpl implements TemporalService {
     // Create a worker that listens on the account task queue
     Worker accountWorker = factory.newWorker(CreateAccountWorkflow.QUEUE_NAME);
     accountWorker.registerWorkflowImplementationTypes(CreateAccountWorkflowImpl.class);
-    accountWorker.registerActivitiesImplementations(
-        accountActivityImpl, paymentCustomerActivityImpl);
-
-    // Create another worker that listens on the payment customer task queue
-    Worker paymentCustomerWorker = factory.newWorker(PaymentCustomerWorkflow.QUEUE_NAME);
-    paymentCustomerWorker.registerWorkflowImplementationTypes(PaymentCustomerWorkflowImpl.class);
-    paymentCustomerWorker.registerActivitiesImplementations(paymentCustomerActivityImpl);
+    accountWorker.registerActivitiesImplementations(accountActivityImpl, paymentCustomerActivityImpl);
 
     // Start all the workers created by this factory
     factory.start();
@@ -77,8 +69,8 @@ public class TemporalServiceImpl implements TemporalService {
     var option =
         WorkflowOptions.newBuilder()
             .setTaskQueue(taskQueue)
-            .setWorkflowExecutionTimeout(Duration.ofMinutes(30))
-            .setWorkflowRunTimeout(Duration.ofMinutes(30))
+            .setWorkflowExecutionTimeout(Duration.ofMinutes(15))
+            .setWorkflowRunTimeout(Duration.ofMinutes(15))
             .setWorkflowTaskTimeout(Duration.ofSeconds(10));
 
     if (workflowId != null) {
