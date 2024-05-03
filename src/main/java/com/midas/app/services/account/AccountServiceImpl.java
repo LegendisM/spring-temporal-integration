@@ -6,9 +6,7 @@ import com.midas.app.repositories.AccountRepository;
 import com.midas.app.services.temporal.TemporalService;
 import com.midas.app.workflows.account.CreateAccountWorkflow;
 import io.temporal.workflow.Workflow;
-
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -16,44 +14,48 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
-    private final Logger logger = Workflow.getLogger(getClass());
+  private final Logger logger = Workflow.getLogger(getClass());
 
-    private final TemporalService temporalService;
+  private final TemporalService temporalService;
 
-    private final AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
-    /**
-     * createAccount creates a new account in the system or provider.
-     *
-     * @param details is the details of the account to be created.
-     * @return Account
-     */
-    @Override
-    public Account createAccount(Account details) {
-        logger.info("initiating workflow to create account for email: {}", details.getEmail());
+  /**
+   * createAccount creates a new account in the system or provider.
+   *
+   * @param details is the details of the account to be created.
+   * @return Account
+   */
+  @Override
+  public Account createAccount(Account details) {
+    logger.info("initiating workflow to create account for email: {}", details.getEmail());
 
-        var accountWorkflow = temporalService.createWorkflowStub(CreateAccountWorkflow.class, CreateAccountWorkflow.QUEUE_NAME, details.getEmail());
+    var accountWorkflow =
+        temporalService.createWorkflowStub(
+            CreateAccountWorkflow.class, CreateAccountWorkflow.QUEUE_NAME, details.getEmail());
 
-        return accountWorkflow.createAccount(details);
-    }
+    return accountWorkflow.createAccount(details);
+  }
 
-    /**
-     * getAccounts returns a list of accounts.
-     *
-     * @return List<Account>
-     */
-    @Override
-    public List<Account> getAccounts() {
-        return accountRepository.findAll();
-    }
+  /**
+   * getAccounts returns a list of accounts.
+   *
+   * @return List<Account>
+   */
+  @Override
+  public List<Account> getAccounts() {
+    return accountRepository.findAll();
+  }
 
-    @Override
-    public Account findById(String id) {
-        return accountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("account-not-found"));
-    }
+  @Override
+  public Account findById(String id) {
+    return accountRepository
+        .findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("account-not-found"));
+  }
 
-    @Override
-    public Account saveAccount(Account account) {
-        return accountRepository.save(account);
-    }
+  @Override
+  public Account saveAccount(Account account) {
+    return accountRepository.save(account);
+  }
 }

@@ -89,8 +89,8 @@ public class TemporalServiceImpl implements TemporalService {
 
   public static ActivityOptions createActivityOptions() {
     return ActivityOptions.newBuilder()
-        //        .setStartToCloseTimeout(Duration.ofMinutes(10))
-        //        .setScheduleToCloseTimeout(Duration.ofMinutes(1))
+        .setStartToCloseTimeout(Duration.ofMinutes(10))
+        .setScheduleToCloseTimeout(Duration.ofMinutes(1))
         .build();
   }
 }
