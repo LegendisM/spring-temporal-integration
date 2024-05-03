@@ -1,5 +1,6 @@
 package com.midas.app.providers.payment;
 
+import com.midas.app.exceptions.ThirdPartyServiceException;
 import com.midas.app.models.Account;
 
 public interface PaymentProvider {
@@ -7,10 +8,10 @@ public interface PaymentProvider {
   String providerName();
 
   /**
-   * createAccount creates a new account in the payment provider.
+   * createCustomer creates a new customer in the payment provider.
    *
-   * @param details is the details of the account to be created.
-   * @return Account
+   * @param account is the account instance
+   * @return id is the returned customer id of payment provider
    */
-  Account createAccount(CreateAccount details);
+  String createCustomer(Account account);
 }

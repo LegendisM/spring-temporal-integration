@@ -1,12 +1,14 @@
 package com.midas.app.services.account;
 
+import com.midas.app.exceptions.ResourceNotFoundException;
 import com.midas.app.models.Account;
 import com.midas.app.repositories.AccountRepository;
-import com.midas.app.workflows.CreateAccountWorkflow;
-import io.temporal.client.WorkflowClient;
-import io.temporal.client.WorkflowOptions;
+import com.midas.app.services.temporal.WorkflowService;
+import com.midas.app.workflows.account.CreateAccountWorkflow;
 import io.temporal.workflow.Workflow;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class AccountServiceImpl implements AccountService {
   private final Logger logger = Workflow.getLogger(AccountServiceImpl.class);
 
-  private final WorkflowClient workflowClient;
+  private final WorkflowService workflowService;
 
   private final AccountRepository accountRepository;
 
@@ -28,17 +30,15 @@ public class AccountServiceImpl implements AccountService {
    */
   @Override
   public Account createAccount(Account details) {
-    var options =
-        WorkflowOptions.newBuilder()
-            .setTaskQueue(CreateAccountWorkflow.QUEUE_NAME)
-            .setWorkflowId(details.getEmail())
-            .build();
-
     logger.info("initiating workflow to create account for email: {}", details.getEmail());
 
-    var workflow = workflowClient.newWorkflowStub(CreateAccountWorkflow.class, options);
+    var accountWorkflow = workflowService.createWorkflowStub(
+            CreateAccountWorkflow.class,
+            CreateAccountWorkflow.QUEUE_NAME,
+            details.getEmail()
+    );
 
-    return workflow.createAccount(details);
+    return accountWorkflow.createAccount(details);
   }
 
   /**
@@ -49,5 +49,16 @@ public class AccountServiceImpl implements AccountService {
   @Override
   public List<Account> getAccounts() {
     return accountRepository.findAll();
+  }
+
+  @Override
+  public Account findById(String id) {
+    return accountRepository.findById(id)
+            .orElseThrow(()-> new ResourceNotFoundException("account-not-found"));
+  }
+
+  @Override
+  public Account saveAccount(Account account) {
+    return accountRepository.save(account);
   }
 }

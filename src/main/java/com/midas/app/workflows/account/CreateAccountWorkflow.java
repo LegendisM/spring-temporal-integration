@@ -1,4 +1,4 @@
-package com.midas.app.workflows;
+package com.midas.app.workflows.account;
 
 import com.midas.app.models.Account;
 import io.temporal.workflow.WorkflowInterface;

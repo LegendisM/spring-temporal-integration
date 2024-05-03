@@ -2,7 +2,6 @@ package com.midas.app.configurations;
 
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
-import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;

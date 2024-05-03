@@ -4,7 +4,6 @@ import com.midas.app.configurations.TemporalConfiguration;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
@@ -23,7 +22,7 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public <T> T createWorkflowStub(Class<T> workflowInterface, String taskQueue, @Nullable String workflowId) {
-        return workflowClient.newWorkflowStub(workflowInterface, this.createWorkflowOption(taskQueue, workflowId));
+        return workflowClient.newWorkflowStub(workflowInterface, createWorkflowOption(taskQueue, workflowId));
     }
 
     @Override
@@ -32,7 +31,7 @@ public class WorkflowServiceImpl implements WorkflowService {
     }
 
     public WorkflowOptions createWorkflowOption(String taskQueue, @Nullable String workflowId) {
-        val option = WorkflowOptions.newBuilder()
+        var option = WorkflowOptions.newBuilder()
                 .setTaskQueue(taskQueue)
                 .setWorkflowExecutionTimeout(Duration.ofSeconds(temporalConfiguration.getWorkflowTimeout()));
 

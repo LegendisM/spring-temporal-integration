@@ -1,8 +1,12 @@
 package com.midas.app.providers.external.stripe;
 
+import com.midas.app.exceptions.ThirdPartyServiceException;
 import com.midas.app.models.Account;
-import com.midas.app.providers.payment.CreateAccount;
 import com.midas.app.providers.payment.PaymentProvider;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Customer;
+import com.stripe.param.CustomerCreateParams;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -10,12 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
 @Getter
 public class StripePaymentProvider implements PaymentProvider {
   private final Logger logger = LoggerFactory.getLogger(StripePaymentProvider.class);
 
   private final StripeConfiguration configuration;
+
+  public StripePaymentProvider(StripeConfiguration configuration){
+      this.configuration = configuration;
+      Stripe.apiKey = configuration.getApiKey();
+  }
 
   /** providerName is the name of the payment provider */
   @Override
@@ -24,13 +32,23 @@ public class StripePaymentProvider implements PaymentProvider {
   }
 
   /**
-   * createAccount creates a new account in the payment provider.
+   * createCustomer creates a new customer in the payment provider.
    *
-   * @param details is the details of the account to be created.
-   * @return Account
+   * @param account is the account instance
+   * @return id is the returned customer id of payment provider
    */
   @Override
-  public Account createAccount(CreateAccount details) {
-    throw new UnsupportedOperationException("Not implemented");
+  public String createCustomer(Account account) {
+    CustomerCreateParams params = CustomerCreateParams.builder()
+            .setEmail(account.getEmail())
+            .setName(account.getFullName())
+            .build();
+    try {
+        var customer = Customer.create(params);
+        logger.info("Stripe customer created with id " + customer.getId());
+        return customer.getId();
+    } catch (StripeException exception){
+        throw new ThirdPartyServiceException();
+    }
   }
 }
