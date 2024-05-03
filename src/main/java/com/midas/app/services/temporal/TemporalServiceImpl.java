@@ -43,7 +43,8 @@ public class TemporalServiceImpl implements TemporalService {
     // Create a worker that listens on the account task queue
     Worker accountWorker = factory.newWorker(CreateAccountWorkflow.QUEUE_NAME);
     accountWorker.registerWorkflowImplementationTypes(CreateAccountWorkflowImpl.class);
-    accountWorker.registerActivitiesImplementations(accountActivityImpl);
+    accountWorker.registerActivitiesImplementations(
+        accountActivityImpl, paymentCustomerActivityImpl);
 
     // Create another worker that listens on the payment customer task queue
     Worker paymentCustomerWorker = factory.newWorker(PaymentCustomerWorkflow.QUEUE_NAME);
