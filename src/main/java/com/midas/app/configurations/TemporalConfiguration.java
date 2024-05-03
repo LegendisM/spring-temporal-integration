@@ -2,6 +2,7 @@ package com.midas.app.configurations;
 
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
+import io.temporal.serviceclient.WorkflowServiceStubsOptions;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
@@ -21,7 +22,7 @@ public class TemporalConfiguration {
     private Long workflowTimeout;
 
     @Bean
-    WorkflowClient workflowClient(WorkflowServiceStubs workflowServiceStubs){
+    public WorkflowClient workflowClient(WorkflowServiceStubs workflowServiceStubs){
         return WorkflowClient.newInstance(workflowServiceStubs);
     }
 }

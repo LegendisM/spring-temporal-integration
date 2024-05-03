@@ -15,6 +15,16 @@ public interface WorkflowService {
     public <T> T createWorkflowStub(Class<T> workflowInterface, @Nullable WorkflowOptions workflowOptions);
 
     /**
+     * createWorkflowStub create new workflow with given workflow interface and seperated option variables
+     *
+     * @param workflowInterface is the interface of your workflow
+     * @param taskQueue         is the queue name
+     * @param workflowId        is the custom workflowId
+     * @return T
+     */
+    public <T> T createWorkflowStub(Class<T> workflowInterface, String taskQueue, @Nullable String workflowId);
+
+    /**
      * findWorkflowStubById find workflow existed instance by workflowId
      *
      * @param workflowInterface is the interface of your workflow
