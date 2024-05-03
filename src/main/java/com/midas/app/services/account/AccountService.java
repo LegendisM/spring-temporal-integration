@@ -1,4 +1,4 @@
-package com.midas.app.services;
+package com.midas.app.services.account;
 
 import com.midas.app.models.Account;
 import java.util.List;

@@ -2,7 +2,7 @@ package com.midas.app.controllers;
 
 import com.midas.app.mappers.Mapper;
 import com.midas.app.models.Account;
-import com.midas.app.services.AccountService;
+import com.midas.app.services.account.AccountService;
 import com.midas.generated.api.AccountsApi;
 import com.midas.generated.model.AccountDto;
 import com.midas.generated.model.CreateAccountDto;
