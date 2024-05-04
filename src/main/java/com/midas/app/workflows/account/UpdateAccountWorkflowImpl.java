@@ -21,7 +21,7 @@ public class UpdateAccountWorkflowImpl implements UpdateAccountWorkflow {
     var account = accountActivity.updateAccount(details);
 
     // * Update account changes on customer instance of account in the providers
-    //    paymentCustomerActivity.updateCustomer(account.getProviderType(), account);
+    paymentCustomerActivity.updateCustomer(account.getProviderType(), account);
 
     return account;
   }
